@@ -9,6 +9,5 @@ export enum EventTypeEnum{
     WORD_REVEAL= "/game/word_reveal",
     END_GAME = "/game/end",
     ROOM_SYNC = "/game/room/sync",
-    DISCONNECT= "disconnect",
-    
+    DISCONNECT= "disconnect", 
 }

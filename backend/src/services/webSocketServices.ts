@@ -35,13 +35,16 @@ class WebSocketServices{
         this.io?.to(socket.id).emit(event,message)
      }
 
-     public sendToRoom(roomId : string ,event:EventTypeEnum,message:any){
-        this.io?.to(roomId).emit(event,message);
-     }
+     public sendToRoom(socket: Socket,event: string, roomId: string,message: any) {
+          socket.to(roomId).emit(event, message);
+      }
 
      public sendToAll(socket:Socket,event:string,message:any){
         socket.broadcast.emit(event,message);
      }
+      public sendToRoomByIO(event: string, roomId: string, message: any) {
+          this.io?.to(roomId).emit(event, message);
+      }
 
 }
 
