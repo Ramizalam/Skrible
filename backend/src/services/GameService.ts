@@ -16,9 +16,9 @@ class GameService{
     private constructor(){};
     public static  getInstance(){
          if(!GameService._instance){
-            this._instance = new GameService();
+            GameService._instance = new GameService();
          }
-         return this._instance;
+         return GameService._instance;
     }
 
     public createGame(socket:Socket,payload : PlayerDTO){
@@ -50,7 +50,7 @@ class GameService{
     }
 
     public joinGame(socket:Socket,payload:PlayerDTO,roomId : string){
-        const room = mapService?.getEntity<Room>(roomId);
+        const room = mapService.getEntity<Room>(roomId);
         if(!room){
             console.log("invalid room id")
             webSocketServices.sendPrivate(
@@ -73,7 +73,7 @@ class GameService{
 
         const playerIds = room.players;
         const players = playerIds.map((id)=>{
-            const player = mapService?.getEntity<Player>(id);
+            const player = mapService.getEntity<Player>(id);
             return player?.toJson();
         })
 
@@ -92,9 +92,9 @@ class GameService{
 
         if(!player || !room) return;
 
-        room!.updateSetting(setting);
-        webSocketServices.sendToRoom(socket,EventTypeEnum.ROUND_SYNC,room!.id,{
-            setting:room!.roomSetting,
+        room.updateSetting(setting);
+        webSocketServices.sendToRoom(socket,EventTypeEnum.ROUND_SYNC,room.id,{
+            setting:room.roomSetting,
         })
     }
 
@@ -108,7 +108,7 @@ class GameService{
             webSocketServices.sendToRoom(
                 socket,
                 EventTypeEnum.DRAW,
-                room!.id,
+                room.id,
                 commands
             )
         }
@@ -197,8 +197,33 @@ class GameService{
         const playerIds =  room.players;
 
         if(playerIds.length<2) return;
+        // choose any random player from the room to draw on canvas
+        const drawer  = mapService.getEntity<Player>(Helper.getRandom<string>(playerIds));
 
-        const draw  = mapService?.getEntity<Player>(Helper.getRandom<string>(playerIds));
+        if(!drawer){
+            return;
+        }
+
+        room.setCurrentPlayerIndex(room.players.indexOf(drawer.id))
+        room.resetScore();
+        room.setGameStarted(true);
+
+        webSocketServices.sendToRoomByIO(EventTypeEnum.ROOM_SYNC,room.id,{
+            game_state : GameStateEnum.START,
+            scores:room.scores,
+            turn_player_id : drawer.id,
+            round : room.currentRound,
+            choosing: true,
+            time_left : room.roomSetting.round_time
+        });
+
+        webSocketServices.sendToRoomByIO(EventTypeEnum.DRAW,room.id,{
+            commands:[[2]],
+        })
+
+        webSocketServices.sendPrivate(drawer.mySocket,EventTypeEnum.ROOM_SYNC,{
+            word_list:gameHelperService.getRandomWords(),
+        })
     }
 
     public reGame(socket: Socket){

@@ -8,7 +8,7 @@ class MapService{
 
     public static getInstance(){
         if(!MapService._instance){
-            this._instance = new MapService();
+            MapService._instance = new MapService();
         }
         return MapService._instance;
     }

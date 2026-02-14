@@ -38,7 +38,7 @@ class Room extends BaseSchema{
     }
 
     private _updateCache(){
-       mapService?.setEntity<Room>(this.id, this);
+       mapService.setEntity<Room>(this.id, this);
     }
 
     public get chanceCount():number{
@@ -169,12 +169,16 @@ class Room extends BaseSchema{
      }
 
      public get gameStarted():boolean{
-        return this.gameStarted;
+        return this._gameStarted;
      }
 
      public setCurrentWord(word : string){
         return this._currentWord = word;
      }
+
+    public checkGuessWord(word: string) {
+        return this._currentWord === word;
+    }
 
 }
 
