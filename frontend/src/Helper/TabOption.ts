@@ -1,0 +1,1 @@
+export const options = ["Player","Chats","Leaderboard"]
