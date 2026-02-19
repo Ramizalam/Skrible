@@ -51,7 +51,7 @@ class GameService {
 
   public joinGame(socket: Socket, payload: PlayerDTO, roomId: string) {
     console.log(`[GameService] joinGame called for room ${roomId}`);
-    const room = mapService.get<Room>(roomId);
+    const room = mapService.getEntity<Room>(roomId);
     if (!room) {
       console.log("invalid room id")
       webSocketServices.sendPrivate(

@@ -28,13 +28,7 @@ class MapService {
         return this.map.delete(id);
     }
 
-    public add<T = any>(id: string, data: T) {
-        this.map.set(id, data);
-    }
 
-    public get<T = any>(id: string): T | undefined {
-        return this.map.get(id) as T | undefined;
-    }
 
 }
 
