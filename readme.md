@@ -88,8 +88,3 @@ Contact
 
 License
 - Check `LICENSE` at the project root for licensing details.
-
-If you'd like, I can also:
-- add a short local development checklist to `readme.md`,
-- open a PR with the README and run the frontend dev server to confirm there are no blocking runtime errors, or
-- generate a smaller README variant for publishing to GitHub.
